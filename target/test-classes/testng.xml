@@ -1,0 +1,14 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="Deck Of Crads Test">
+
+    <test name = "apitests">
+        <classes>
+            <class name="com.deckofcards.apitests.DeckOfCardsApiCreateNewDeckTest"/>
+            <class name="com.deckofcards.apitests.DeckOfCardsAddJokerUsingGetTests"/>
+            <class name="com.deckofcards.apitests.DeckOfCradsDrawCardTests"/>
+            <class name="com.deckofcards.apitests.DeckOfCardsAddJokerUsingPostTests"/>
+        </classes>
+    </test>
+
+</suite>
