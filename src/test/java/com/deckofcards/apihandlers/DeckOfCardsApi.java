@@ -79,7 +79,7 @@ public class DeckOfCardsApi {
      */
     public static CloseableHttpResponse drawCardsFromDeckUsingGet(String url, String deckID, String numOfCardsToDraw) throws IOException, URISyntaxException {
 
-        url = new String(url+deckID+"/draw/?"+numOfCardsToDraw);
+        url = new String(url+deckID+"/draw/?count="+numOfCardsToDraw);
         CloseableHttpClient client = HttpClientBuilder.create().build();
         CloseableHttpResponse response = client.execute(new HttpGet(new URI(url)));
         return response;

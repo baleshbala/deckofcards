@@ -2,6 +2,7 @@ package com.deckofcards.apitests;
 
 import com.deckofcards.apihandlers.DeckOfCardsApi;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -68,16 +69,33 @@ public class DeckOfCradsDrawCardTests {
         response = DeckOfCardsApi.drawCardsFromDeckUsingGet("https://deckofcardsapi.com/api/deck/", deckID, "2");
         jsonObject = DeckOfCardsApi.getJsonData(response);
 
-        Assert.assertEquals(DeckOfCardsApi.getJsonValue(jsonObject, jkey_remaining), "50");
+        Assert.assertEquals(DeckOfCardsApi.getJsonValue(jsonObject, jkey_remaining), "49");
+    }
+
+    @Test(priority = 6, description="Check for remaining cards field, with bad value to Draw", dependsOnGroups = "StatusCheck")
+    public void countNumberOfCradsDrawn() throws IOException, URISyntaxException {
+        response = DeckOfCardsApi.drawCardsFromDeckUsingGet("https://deckofcardsapi.com/api/deck/", deckID, "3");
+        jsonObject = DeckOfCardsApi.getJsonData(response);
+        JSONArray cardsArray = jsonObject.getJSONArray("cards");
+
+        Assert.assertEquals(cardsArray.length(), 3);
     }
 
     // THIS TEST WILL FAIL, DECKOFCARDS API HAS AN ERROR.
     // When given -n, All Cards are deleted but only n card remains.
-    @Test(priority = 6, description="Check for remaining cards field, with bad value to Draw", dependsOnGroups = "StatusCheck")
+    @Test(priority = 7, description="Check for remaining cards field, with bad value to Draw", dependsOnGroups = "StatusCheck")
     public void drawUsingBadCountValue() throws IOException, URISyntaxException {
         response = DeckOfCardsApi.drawCardsFromDeckUsingGet("https://deckofcardsapi.com/api/deck/", deckID, "-1");
         jsonObject = DeckOfCardsApi.getJsonData(response);
 
         Assert.assertEquals(DeckOfCardsApi.getJsonValue(jsonObject, jkey_remaining), "50", "Expected to Fail, Seems like an error in the API; When given -n, n is a number, All Cards are deleted but only n card remains.");
+    }
+
+    @Test(priority = 8, description="Check for remaining cards field, with bad value to Draw", dependsOnGroups = "StatusCheck")
+    public void drawUsingLargerCountValue() throws IOException, URISyntaxException {
+        response = DeckOfCardsApi.drawCardsFromDeckUsingGet("https://deckofcardsapi.com/api/deck/", deckID, "64");
+        jsonObject = DeckOfCardsApi.getJsonData(response);
+
+        Assert.assertEquals(DeckOfCardsApi.getJsonValue(jsonObject, jkey_remaining), "49", "Not working as expected, insteadof failing its removing all the cards");
     }
 }
